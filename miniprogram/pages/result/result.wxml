@@ -1,0 +1,35 @@
+<view class="page">
+  <view class="summary sec" wx:if="{{items.length}}">
+    <view class="summary-main">完成 {{okCount}} 张{{savedPct > 0 ? '，共省 ' + savedPct + '%' : ''}}</view>
+    <view class="summary-sub" wx:if="{{notMetCount}}">{{notMetCount}} 张未能精确达标，已给出最接近结果</view>
+    <view class="summary-sub" wx:if="{{failCount}}">{{failCount}} 张失败，可返回后重试</view>
+  </view>
+
+  <view class="item sec" wx:for="{{items}}" wx:key="index">
+    <image class="item-thumb" src="{{item.path}}" mode="aspectFit" bindtap="onPreview" data-path="{{item.path}}" />
+    <view class="item-info">
+      <view class="item-line">
+        <text class="item-size">{{item.inSize}} → {{item.outSize}}</text>
+        <text class="badge {{item.badgeClass}}">{{item.badgeText}}</text>
+      </view>
+      <view class="item-dim">{{item.dim}}{{item.metaText}}</view>
+      <view class="item-actions">
+        <view class="act" hover-class="act-hover" bindtap="onSaveOne" data-path="{{item.path}}">存相册</view>
+        <view class="act" hover-class="act-hover" bindtap="onShareOne" data-path="{{item.path}}" data-idx="{{index}}">发好友</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="failed sec" wx:if="{{failedList.length}}">
+    <view class="sec-title">失败 {{failedList.length}} 张</view>
+    <view class="failed-item" wx:for="{{failedList}}" wx:key="index">{{item}}</view>
+    <button class="btn-ghost retry-btn" bindtap="onRetryFailed">重试失败的 {{failCount}} 张</button>
+  </view>
+
+  <ad wx:if="{{adUnitId}}" class="ad-block" unit-id="{{adUnitId}}" binderror="onAdError"></ad>
+
+  <button class="btn-primary" wx:if="{{items.length > 1}}" hover-class="btn-hover" bindtap="onSaveAll">全部保存到相册</button>
+  <button class="btn-ghost gap" open-type="share" hover-class="btn-hover">分享给朋友</button>
+  <button class="btn-ghost gap" hover-class="btn-hover" bindtap="onTuneAgain">微调再压</button>
+  <button class="btn-ghost gap" hover-class="btn-hover" bindtap="onPickAgain">再选图片</button>
+</view>

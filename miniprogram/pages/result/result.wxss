@@ -1,0 +1,106 @@
+.summary-main {
+  font-size: 36rpx;
+  font-weight: 700;
+}
+
+.summary-sub {
+  margin-top: 10rpx;
+  font-size: 24rpx;
+  color: #ff7d00;
+}
+
+.item {
+  display: flex;
+  align-items: flex-start;
+}
+
+.item-thumb {
+  width: 148rpx;
+  height: 148rpx;
+  border-radius: 16rpx;
+  background: #f2f3f5;
+  flex-shrink: 0;
+}
+
+.item-info {
+  flex: 1;
+  margin-left: 22rpx;
+  min-width: 0;
+}
+
+.item-line {
+  display: flex;
+  align-items: center;
+}
+
+.item-size {
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.badge {
+  font-size: 22rpx;
+  padding: 4rpx 14rpx;
+  border-radius: 8rpx;
+  margin-left: 16rpx;
+}
+
+.badge-good {
+  color: #07c160;
+  background: rgba(7, 193, 96, 0.1);
+}
+
+.badge-bad {
+  color: #ff7d00;
+  background: rgba(255, 125, 0, 0.1);
+}
+
+.badge-neutral {
+  color: #86909c;
+  background: #f2f3f5;
+}
+
+.item-dim {
+  margin-top: 10rpx;
+  font-size: 24rpx;
+  color: #86909c;
+}
+
+.item-actions {
+  margin-top: 18rpx;
+  display: flex;
+}
+
+.act {
+  font-size: 26rpx;
+  color: #07c160;
+  background: rgba(7, 193, 96, 0.08);
+  border-radius: 999rpx;
+  padding: 12rpx 32rpx;
+  margin-right: 16rpx;
+}
+
+.act-hover {
+  opacity: 0.7;
+}
+
+.failed-item {
+  font-size: 24rpx;
+  color: #f53f3f;
+  margin-bottom: 8rpx;
+  word-break: break-all;
+}
+
+.retry-btn {
+  margin-top: 16rpx;
+  font-size: 26rpx;
+}
+
+.gap {
+  margin-top: 20rpx;
+}
+
+.ad-block {
+  margin-bottom: 24rpx;
+  min-height: 20rpx;
+}

@@ -1,0 +1,20 @@
+.about-title {
+  font-size: 36rpx;
+  font-weight: 600;
+}
+
+.about-ver {
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  color: #86909c;
+}
+
+.about-p {
+  font-size: 26rpx;
+  color: #4e5969;
+  margin-bottom: 14rpx;
+}
+
+.feedback-btn {
+  margin-top: 12rpx;
+}

@@ -1,0 +1,71 @@
+/* 全局基础样式（设计基调：浅灰底 + 白卡片 + 微软绿主色） */
+
+page {
+  background: #f6f7f9;
+  color: #1f2329;
+  font-size: 28rpx;
+  line-height: 1.5;
+}
+
+.page {
+  padding: 24rpx 24rpx calc(28rpx + env(safe-area-inset-bottom));
+}
+
+/* 重置 button 原生样式（::after 边框/内边距），统一由类控制 */
+button {
+  padding: 0;
+}
+
+button::after {
+  border: none;
+}
+
+.sec {
+  background: #ffffff;
+  border-radius: 20rpx;
+  padding: 28rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 6rpx 20rpx rgba(31, 35, 41, 0.04);
+}
+
+.sec-title {
+  font-size: 26rpx;
+  color: #86909c;
+  margin-bottom: 16rpx;
+}
+
+.btn-primary {
+  height: 92rpx;
+  line-height: 92rpx;
+  background: linear-gradient(135deg, #0bc26b, #07b75a);
+  color: #ffffff;
+  border-radius: 20rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+  box-shadow: 0 8rpx 20rpx rgba(7, 193, 96, 0.25);
+}
+
+.btn-primary[disabled] {
+  opacity: 0.45;
+}
+
+.btn-ghost {
+  height: 92rpx;
+  line-height: 92rpx;
+  background: #ffffff;
+  color: #1f2329;
+  border: 2rpx solid #e5e6eb;
+  border-radius: 20rpx;
+  font-size: 30rpx;
+}
+
+.btn-hover {
+  opacity: 0.82;
+  transform: scale(0.99);
+}
+
+.hint {
+  font-size: 24rpx;
+  color: #86909c;
+  margin-top: 16rpx;
+}

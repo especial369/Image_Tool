@@ -1,0 +1,37 @@
+<view class="page">
+  <view class="hero">
+    <view class="hero-title">图片压缩</view>
+    <view class="hero-sub">图片不离开手机 · 不上传服务器 · 无水印</view>
+  </view>
+
+  <view class="grid-row">
+    <view class="card" hover-class="card-hover" bindtap="onPick" data-mode="compress">
+      <view class="card-icon icon-green">🗜️</view>
+      <view class="card-name">图片压缩</view>
+      <view class="card-desc">质量滑杆快速瘦身</view>
+    </view>
+    <view class="card" hover-class="card-hover" bindtap="onPick" data-mode="targetKB">
+      <view class="card-icon icon-blue">🎯</view>
+      <view class="card-name">指定大小</view>
+      <view class="card-desc">压到 20/50/100 KB</view>
+    </view>
+  </view>
+  <view class="grid-row">
+    <view class="card" hover-class="card-hover" bindtap="onPick" data-mode="resize">
+      <view class="card-icon icon-orange">📐</view>
+      <view class="card-name">改尺寸</view>
+      <view class="card-desc">像素等比缩放</view>
+    </view>
+    <view class="card" hover-class="card-hover" bindtap="onPick" data-mode="convert">
+      <view class="card-icon icon-purple">🔄</view>
+      <view class="card-name">转格式</view>
+      <view class="card-desc">PNG ↔ JPG</view>
+    </view>
+  </view>
+
+  <button class="btn-ghost chat-btn" hover-class="btn-hover" bindtap="onPickChat">从聊天记录选择图片文件</button>
+
+  <view class="footer">
+    <text class="about-link" bindtap="onAbout">关于 / 隐私政策</text>
+  </view>
+</view>

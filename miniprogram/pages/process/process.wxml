@@ -1,0 +1,129 @@
+<view class="page">
+  <view class="sec">
+    <view class="sec-title">已选 {{sources.length}} 张（已锁定原图）</view>
+    <scroll-view scroll-x class="thumbs" enhanced show-scrollbar="{{false}}">
+      <view class="thumb-cell" wx:for="{{sourceItems}}" wx:key="path">
+        <image class="thumb" src="{{item.path}}" mode="aspectFit" />
+        <view class="thumb-meta">{{item.meta || '读取中…'}}</view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <view class="sec">
+    <view class="seg">
+      <view class="seg-item {{mode === 'quality' ? 'seg-on' : ''}}" bindtap="setMode" data-mode="quality">质量压缩</view>
+      <view class="seg-item {{mode === 'targetKB' ? 'seg-on' : ''}}" bindtap="setMode" data-mode="targetKB">指定大小</view>
+      <view class="seg-item {{mode === 'resize' ? 'seg-on' : ''}}" bindtap="setMode" data-mode="resize">改尺寸</view>
+    </view>
+
+    <block wx:if="{{mode === 'quality'}}">
+      <view class="row">
+        <text>压缩质量</text>
+        <text class="row-val">{{quality}}</text>
+      </view>
+      <slider
+        min="10"
+        max="100"
+        step="5"
+        value="{{quality}}"
+        activeColor="#07c160"
+        block-size="20"
+        bindchanging="onQualityChanging"
+        bindchange="onQuality"
+      />
+      <view class="hint">质量指 JPG 压缩质量（1-100）：越高越清晰、体积越大，一般 60~80 即可</view>
+    </block>
+
+    <block wx:if="{{mode === 'targetKB'}}">
+      <view class="chips">
+        <view
+          wx:if="{{recKB}}"
+          class="chip {{targetKB === recKB && !customKB ? 'chip-on' : ''}}"
+          bindtap="setKB"
+          data-kb="{{recKB}}"
+        >推荐 {{recKB}} KB</view>
+        <view
+          wx:for="{{kbChips}}"
+          wx:key="*this"
+          class="chip {{targetKB === item && !customKB ? 'chip-on' : ''}}"
+          bindtap="setKB"
+          data-kb="{{item}}"
+        >{{item}} KB</view>
+      </view>
+      <view class="row">
+        <input type="number" class="kb-input" placeholder="自定义 KB" value="{{customKB}}" bindinput="onCustomKB" />
+        <text class="row-unit">KB</text>
+      </view>
+
+      <view class="row limit-row">
+        <text class="limit-label">限定尺寸</text>
+        <input type="number" class="dim-input" placeholder="宽px" value="{{limitW}}" bindinput="onLimitW" />
+        <text class="dim-x">×</text>
+        <input type="number" class="dim-input" placeholder="高px" value="{{limitH}}" bindinput="onLimitH" />
+        <view class="link" wx:if="{{limitW || limitH}}" bindtap="clearLimit">清除</view>
+      </view>
+      <view class="chips">
+        <view
+          wx:for="{{photoPresets}}"
+          wx:key="key"
+          class="chip {{photoPresetKey === item.key ? 'chip-on' : ''}}"
+          bindtap="setPhotoPreset"
+          data-key="{{item.key}}"
+        >{{item.name}}</view>
+      </view>
+      <view class="hint">输出 JPG。不限定尺寸时自动寻找质量与尺寸的最优组合</view>
+      <view class="hint" wx:if="{{limitW && limitH}}">已限定 {{limitW}}×{{limitH}}：仅调质量逼近目标体积，尺寸不再变化</view>
+    </block>
+
+    <block wx:if="{{mode === 'resize'}}">
+      <view class="chips">
+        <view
+          wx:for="{{percentChips}}"
+          wx:key="*this"
+          class="chip {{scalePercent === item ? 'chip-on' : ''}}"
+          bindtap="setScale"
+          data-percent="{{item}}"
+        >{{item}}%</view>
+        <view class="chip {{scalePercent === 0 ? 'chip-on' : ''}}" bindtap="setScale" data-percent="0">按像素</view>
+      </view>
+      <view class="chips">
+        <view
+          wx:for="{{sizePresets}}"
+          wx:key="key"
+          class="chip {{sizePresetKey === item.key ? 'chip-on' : ''}}"
+          bindtap="setSizePreset"
+          data-key="{{item.key}}"
+        >{{item.name}}</view>
+      </view>
+      <view class="row limit-row">
+        <input type="number" class="dim-input wide" placeholder="宽px" value="{{inputW}}" bindinput="onInputW" />
+        <text class="dim-x">×</text>
+        <input type="number" class="dim-input wide" placeholder="高px" value="{{inputH}}" bindinput="onInputH" />
+        <view class="lock {{lockRatio ? 'lock-on' : ''}}" bindtap="toggleLock">{{lockRatio ? '等比' : '自由'}}</view>
+      </view>
+      <view class="hint">等比模式下只填一边，另一边自动换算；像素改小体积通常也随之变小</view>
+    </block>
+
+    <block wx:if="{{mode !== 'targetKB'}}">
+      <view class="row fmt-row">
+        <text>输出格式</text>
+        <radio-group class="radios" bindchange="onFormat">
+          <label class="radio"><radio value="auto" checked="{{format === 'auto'}}" color="#07c160" />原格式</label>
+          <label class="radio"><radio value="jpg" checked="{{format === 'jpg'}}" color="#07c160" />JPG</label>
+          <label class="radio"><radio value="png" checked="{{format === 'png'}}" color="#07c160" />PNG</label>
+        </radio-group>
+      </view>
+    </block>
+  </view>
+
+  <view class="sec" wx:if="{{running}}">
+    <view class="progress-text">{{doneCount}}/{{total}} · 处理中，请保持小程序在前台</view>
+    <progress percent="{{percent}}" stroke-width="4" activeColor="#07c160" border-radius="4" />
+  </view>
+
+  <button class="btn-primary" hover-class="btn-hover" disabled="{{running || !sources.length}}" bindtap="onStart">开始处理</button>
+  <view class="err" wx:if="{{lastError}}">{{lastError}}</view>
+</view>
+
+<!-- 引擎专用隐藏 canvas：不可 display:none，移出可视区即可 -->
+<canvas type="2d" id="engineCanvas" class="engine-canvas"></canvas>

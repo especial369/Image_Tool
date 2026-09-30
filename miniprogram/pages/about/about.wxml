@@ -1,0 +1,28 @@
+<view class="page">
+  <view class="sec">
+    <view class="about-title">图片压缩</view>
+    <view class="about-ver">版本 0.2.0（MVP）</view>
+  </view>
+
+  <view class="sec">
+    <view class="sec-title">隐私政策</view>
+    <view class="about-p">更新日期：2026-09-29</view>
+    <view class="about-p">1. 图片数据处理：所有压缩、尺寸调整与格式转换均在你手机本地完成，你的图片不会上传到任何服务器。</view>
+    <view class="about-p">2. 权限使用：保存图片到相册时需「添加到相册」权限，仅用于写入你确认保存的结果图；选图与从聊天记录选择文件不需要额外授权。</view>
+    <view class="about-p">3. 本地存储：处理产物保存在小程序的本地用户文件目录，删除小程序即可清除全部本地数据。</view>
+    <view class="about-p">4. 第三方能力：本产品接入微信流量主广告能力（当前处于未开启状态），开启后广告组件可能收集设备型号、系统版本等信息用于广告展示与统计；我们不会向任何第三方提供你的图片。</view>
+    <view class="about-p">5. 未成年人：未成年人使用本服务应取得监护人同意。</view>
+    <view class="about-p">6. 政策更新：政策如有变更将在本页更新并标注日期。如你有疑问，请通过页面底部「意见反馈」联系我们。</view>
+  </view>
+
+  <view class="sec">
+    <view class="sec-title">用户协议</view>
+    <view class="about-p">1. 服务说明：本小程序为免费的本地图片处理工具，提供图片压缩、指定大小压缩、尺寸调整与格式转换功能。</view>
+    <view class="about-p">2. 免责声明：压缩效果与原图有关，请自行确认处理结果满足你的提交要求；处理前请自行备份重要图片，因设备故障或误操作导致的数据丢失，我们不承担责任。</view>
+    <view class="about-p">3. 使用规范：你承诺使用本工具处理合法合规的内容，不得用于违法违规用途。</view>
+    <view class="about-p">4. 广告说明：为维持免费运营，产品可能展示广告；基础功能的完整使用不需要观看广告。</view>
+    <view class="about-p">5. 协议变更：协议如有变更将在本页更新，继续使用即视为接受更新后的协议。</view>
+  </view>
+
+  <button class="btn-ghost feedback-btn" open-type="feedback" hover-class="btn-hover">意见反馈</button>
+</view>
