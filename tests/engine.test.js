@@ -4,8 +4,8 @@
  * 模拟导出器基于「体积 ≈ 底数 ×(0.25+0.75·q)×scale²」的线性化 JPEG 模型。
  */
 const assert = require('assert');
-const { searchForTargetBytes } = require('../.test-build/qualitySearch.js');
-const { runSerial } = require('../.test-build/queue.js');
+const { searchForTargetBytes } = require('../.test-build/engine/qualitySearch.js');
+const { runSerial } = require('../.test-build/engine/queue.js');
 
 const KB = 1024;
 const MB = 1024 * 1024;

@@ -293,7 +293,7 @@ export function openGif(buf: ArrayBuffer): OpenedGif {
     }
   }
 
-  return { width: meta.width, height: meta.height, loopCount: meta.loopCount, frames };
+  return Object.assign(meta, { frames });
 }
 
 /** 一次性解码全部帧（拷贝，测试与小图用） */
