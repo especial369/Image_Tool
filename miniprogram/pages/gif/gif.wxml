@@ -1,0 +1,73 @@
+<view class="page">
+  <view class="sec">
+    <view class="seg">
+      <view class="seg-item {{mode === 'compress' ? 'seg-on' : ''}}" bindtap="setMode" data-mode="compress">GIF 压缩</view>
+      <view class="seg-item {{mode === 'split' ? 'seg-on' : ''}}" bindtap="setMode" data-mode="split">GIF 拆帧</view>
+    </view>
+
+    <view class="sec-title" wx:if="{{files.length}}">已选 {{files.length}} 个 GIF</view>
+    <view class="sec-title" wx:else>先选择要处理的 GIF 文件</view>
+    <scroll-view scroll-x class="thumbs" enhanced show-scrollbar="{{false}}">
+      <view class="thumb-cell" wx:for="{{files}}" wx:key="path">
+        <image class="thumb" src="{{item.path}}" mode="aspectFit" />
+        <view class="thumb-meta">{{item.sizeText}}</view>
+      </view>
+    </scroll-view>
+    <view class="pick-row">
+      <button class="btn-ghost pick-btn" hover-class="btn-hover" bindtap="onPickAlbum">相册选择</button>
+      <button class="btn-ghost pick-btn" hover-class="btn-hover" bindtap="onPickChat">聊天文件选择</button>
+    </view>
+  </view>
+
+  <view class="sec" wx:if="{{mode === 'compress'}}">
+    <view class="chips">
+      <view
+        wx:for="{{presets}}"
+        wx:key="key"
+        class="chip {{presetKey === item.key ? 'chip-on' : ''}}"
+        bindtap="setPreset"
+        data-key="{{item.key}}"
+      >{{item.name}}</view>
+    </view>
+    <view class="chips">
+      <view
+        wx:for="{{widthChips}}"
+        wx:key="label"
+        class="chip {{maxWidth === item.v ? 'chip-on' : ''}}"
+        bindtap="setWidth"
+        data-v="{{item.v}}"
+      >{{item.label}}</view>
+    </view>
+    <view class="row">
+      <text>目标体积（可选）</text>
+      <input type="number" class="kb-input" placeholder="KB" value="{{targetKB}}" bindinput="onTargetKB" />
+    </view>
+    <view class="hint">强压=64色/半帧率，平衡=128色/75%帧率，高清=256色/保留全部帧；未达目标体积会自动加压重试一次</view>
+  </view>
+
+  <view class="sec" wx:if="{{mode === 'split'}}">
+    <view class="chips">
+      <view
+        wx:for="{{splitLimits}}"
+        wx:key="label"
+        class="chip {{splitLimit === item.v ? 'chip-on' : ''}}"
+        bindtap="setSplitLimit"
+        data-v="{{item.v}}"
+      >{{item.label}}</view>
+    </view>
+    <view class="hint">每一帧导出为一张 PNG（最长边过大时会提示），可在结果页逐帧保存或发送</view>
+  </view>
+
+  <view class="sec" wx:if="{{running}}">
+    <view class="progress-text">{{doneCount}}/{{total}} · {{statusText}}</view>
+    <progress percent="{{percent}}" stroke-width="4" activeColor="#07c160" border-radius="4" />
+  </view>
+
+  <button class="btn-primary" hover-class="btn-hover" disabled="{{running || !files.length}}" bindtap="onStart">
+    {{mode === 'compress' ? '开始压缩' : '开始拆帧'}}
+  </button>
+  <view class="err" wx:if="{{lastError}}">{{lastError}}</view>
+</view>
+
+<!-- 拆帧导出用隐藏 canvas -->
+<canvas type="2d" id="gifCanvas" class="engine-canvas"></canvas>

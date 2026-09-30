@@ -199,12 +199,13 @@ export function openGif(buf: ArrayBuffer): OpenedGif {
       if (block === 0x21) {
         const label = r.u8();
         if (label === 0xf9) {
-          const size = r.u8(); // 固定 4
+          const size = r.u8(); // 规范为 4
           const gPacked = r.u8();
           gceDelayCs = r.u16();
-          gceTransparent = gPacked & 1 ? r.u8() : -1;
+          const transIdx = r.u8(); // 第 4 字节始终存在，仅透明标志置位时生效
+          gceTransparent = gPacked & 1 ? transIdx : -1;
           gceDisposal = (gPacked >> 2) & 7;
-          if (size < 4) r.pos += 1; // 容错：个别编码器 size 不足
+          if (size > 4) r.pos += size - 4; // 容错：个别编码器会多写
           r.u8(); // block terminator
         } else if (label === 0xff) {
           r.u8(); // 应用扩展标识块长（11）

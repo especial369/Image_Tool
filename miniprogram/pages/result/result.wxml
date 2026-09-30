@@ -29,7 +29,27 @@
   <ad wx:if="{{adUnitId}}" class="ad-block" unit-id="{{adUnitId}}" binderror="onAdError"></ad>
 
   <button class="btn-primary" wx:if="{{items.length > 1}}" hover-class="btn-hover" bindtap="onSaveAll">全部保存到相册</button>
-  <button class="btn-ghost gap" open-type="share" hover-class="btn-hover">分享给朋友</button>
-  <button class="btn-ghost gap" hover-class="btn-hover" bindtap="onTuneAgain">微调再压</button>
-  <button class="btn-ghost gap" hover-class="btn-hover" bindtap="onPickAgain">再选图片</button>
+  <view class="quick-row {{items.length > 1 ? 'quick-row-gap' : ''}}">
+    <button class="btn-ghost quick-btn" hover-class="btn-hover" bindtap="onOpenSharePanel">分享给朋友</button>
+    <button class="btn-ghost quick-btn" hover-class="btn-hover" bindtap="onTuneAgain">微调再压</button>
+    <button class="btn-ghost quick-btn" hover-class="btn-hover" bindtap="onPickAgain">再选图片</button>
+  </view>
+
+  <view class="share-mask" wx:if="{{sharePanel}}" bindtap="onCloseSharePanel">
+    <view class="share-panel" catchtap="noop">
+      <view class="share-head">
+        <view class="share-title">发送给好友</view>
+        <view class="share-close" bindtap="onCloseSharePanel">×</view>
+      </view>
+      <view class="share-grid">
+        <view class="share-cell" wx:for="{{items}}" wx:key="index" bindtap="onToggleShare" data-idx="{{index}}">
+          <image class="share-thumb" src="{{item.path}}" mode="aspectFill" />
+          <view class="share-check {{shareChecks[index] ? 'checked' : ''}}">✓</view>
+        </view>
+      </view>
+      <button class="btn-primary share-send" hover-class="btn-hover" bindtap="onConfirmShare" disabled="{{!shareSelCount}}">发送给好友（{{shareSelCount}} 张）</button>
+      <button class="btn-ghost share-card" open-type="share" bindtap="onCloseSharePanel" hover-class="btn-hover">转发小程序卡片</button>
+      <view class="share-tip">微信单次仅支持发送 1 张，多选后将打开预览，长按图片逐张发送</view>
+    </view>
+  </view>
 </view>

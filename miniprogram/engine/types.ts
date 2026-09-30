@@ -61,6 +61,8 @@ export interface ProcessResult {
   downsampled?: boolean;
   /** 同格式重编码未变小，已保留原图（坑 1） */
   keptOriginal?: boolean;
+  /** 附加说明（如 GIF 档位、拆帧序号），结果页展示在元信息中 */
+  note?: string;
   error?: string;
 }
 

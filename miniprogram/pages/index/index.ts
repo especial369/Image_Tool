@@ -1,20 +1,53 @@
+import { CAPABILITIES, CAPABILITY_GROUPS } from '../../capabilities/registry';
 import { chooseChatFiles, chooseImages, showModal } from '../../utils/wxp';
-import { setSelection, store, type FuncKey } from '../../utils/store';
+import { setSelection, store } from '../../utils/store';
 import { isSupportedImagePath } from '../../engine/index';
 import { track } from '../../utils/track';
 
 const MAX_PICK = 20; // 基础库 2.25.0+ chooseMedia 单次上限
 
 Page({
-  onPick(e: { currentTarget: { dataset: { mode?: string } } }) {
-    const mode = (e.currentTarget.dataset.mode ?? 'compress') as FuncKey;
-    store.funcKey = mode;
-    track('func_click', { mode });
-    void this.chooseFromAlbum();
+  data: {
+    groups: [] as {
+      title: string;
+      rows: { key: string; name: string; desc: string; icon: string; tint: string }[][];
+    }[],
+  },
+
+  onLoad() {
+    this.setData({
+      groups: CAPABILITY_GROUPS.map((title) => ({
+        title,
+        rows: chunk(
+          CAPABILITIES.filter((c) => c.group === title).map(({ key, name, desc, icon, tint }) => ({
+            key,
+            name,
+            desc,
+            icon,
+            tint,
+          })),
+          2
+        ),
+      })),
+    });
   },
 
   onShareAppMessage(): { title: string; path: string } {
     return { title: '免费图片压缩，图片不离开手机', path: '/pages/index/index' };
+  },
+
+  onCap(e: { currentTarget: { dataset: { key?: string } } }) {
+    const cap = CAPABILITIES.find((c) => c.key === e.currentTarget.dataset.key);
+    if (!cap) return;
+    track('func_click', { mode: cap.key });
+    if (cap.setFuncKey) {
+      // 图片类能力：选图后进统一处理页
+      store.funcKey = cap.setFuncKey;
+      void this.chooseFromAlbum();
+    } else {
+      // 新页面类型能力（GIF 等）：带参数跳能力页，由能力页自行选文件
+      wx.navigateTo({ url: cap.route + (cap.query ?? '') });
+    }
   },
 
   async chooseFromAlbum() {
@@ -75,3 +108,9 @@ Page({
     wx.navigateTo({ url: '/pages/about/about' });
   },
 });
+
+function chunk<T>(arr: T[], size: number): T[][] {
+  const rows: T[][] = [];
+  for (let i = 0; i < arr.length; i += size) rows.push(arr.slice(i, i + size));
+  return rows;
+}

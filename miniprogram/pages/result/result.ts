@@ -24,6 +24,9 @@ Page({
     notMetCount: 0,
     savedPct: 0,
     adUnitId: '',
+    sharePanel: false,
+    shareChecks: [] as boolean[],
+    shareSelCount: 0,
   },
 
   onLoad() {
@@ -74,6 +77,7 @@ Page({
     const outBytes = r.outputBytes ?? 0;
     const savedPct = inBytes > 0 ? Math.round((1 - outBytes / inBytes) * 100) : 0;
     const meta: string[] = [];
+    if (r.note) meta.push(r.note);
     if (r.qualityUsed != null) meta.push(`质量 ${r.qualityUsed}`);
     if (r.downsampled) meta.push('已降采样');
     if (r.keptOriginal) meta.push('已保留原图');
@@ -130,14 +134,69 @@ Page({
 
   async onShareOne(e: { currentTarget: { dataset: { path?: string; idx?: number } } }) {
     const path = e.currentTarget.dataset.path;
-    const idx = e.currentTarget.dataset.idx ?? 0;
+    const idx = Number(e.currentTarget.dataset.idx ?? 0);
     if (!path) return;
     const ext = path.toLowerCase().endsWith('.png') ? 'png' : 'jpg';
     track('share_file', { ext });
+    this.sendOne(path, idx, ext);
+  },
+
+  noop() {},
+
+  /** 底部弹层：多选要发送的图片（默认全选） */
+  onOpenSharePanel() {
+    if (!this.data.items.length) return;
+    track('share_panel_open', { n: this.data.items.length });
+    this.setData({
+      sharePanel: true,
+      shareChecks: this.data.items.map(() => true),
+      shareSelCount: this.data.items.length,
+    });
+  },
+
+  onCloseSharePanel() {
+    this.setData({ sharePanel: false });
+  },
+
+  onToggleShare(e: { currentTarget: { dataset: { idx?: number } } }) {
+    const idx = Number(e.currentTarget.dataset.idx ?? -1);
+    if (idx < 0 || idx >= this.data.shareChecks.length) return;
+    const checks = this.data.shareChecks.slice();
+    checks[idx] = !checks[idx];
+    this.setData({ shareChecks: checks, shareSelCount: checks.filter(Boolean).length });
+  },
+
+  /**
+   * 多选发送：微信无一次发多图的 API（单次仅 1 张）。
+   * 选 1 张 → 直接以文件形式发送；选多张 → 打开预览由用户长按逐张发送。
+   */
+  onConfirmShare() {
+    const selected = this.data.items.filter((_, i) => this.data.shareChecks[i]);
+    if (!selected.length) return;
+    this.setData({ sharePanel: false });
+    track('share_file', { n: selected.length });
+    if (selected.length === 1) {
+      this.sendOne(selected[0].path, 0);
+      return;
+    }
+    wx.showModal({
+      title: '逐张发送',
+      content: `微信单次只能发送 1 张图片，接下来将打开 ${selected.length} 张图片的预览，长按图片并选择“发送给朋友”，可左右滑动逐张发送。`,
+      showCancel: false,
+      confirmText: '知道了',
+      success: () => {
+        wx.previewImage({ urls: selected.map((s) => s.path) });
+      },
+    });
+  },
+
+  /** 以文件形式发送单张（保留压缩后原始质量） */
+  sendOne(path: string, idx: number, ext?: string) {
+    const suffix = ext ?? (path.toLowerCase().endsWith('.png') ? 'png' : 'jpg');
     try {
       wx.shareFileMessage({
         filePath: path,
-        fileName: `compressed-${Number(idx) + 1}.${ext}`,
+        fileName: `compressed-${idx + 1}.${suffix}`,
         success: () => undefined,
         fail: (r) => {
           if (!/cancel/i.test(r.errMsg)) {

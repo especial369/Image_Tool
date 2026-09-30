@@ -2,6 +2,7 @@
   "pages": [
     "pages/index/index",
     "pages/process/process",
+    "pages/gif/gif",
     "pages/result/result",
     "pages/about/about"
   ],

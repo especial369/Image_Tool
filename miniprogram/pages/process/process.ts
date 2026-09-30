@@ -9,6 +9,7 @@ import {
   type ProcessResult,
   type SourceImage,
 } from '../../engine/index';
+import { pageCanvasProvider } from '../../utils/canvas';
 import { PHOTO_PRESETS, SIZE_PRESETS } from '../../utils/presets';
 import { formatSize } from '../../utils/file';
 import { store } from '../../utils/store';
@@ -106,24 +107,8 @@ Page({
   },
 
   onReady() {
-    if (USE_OFFSCREEN) {
-      this.provider = createOffscreenProvider();
-      return;
-    }
-    this.provider = () =>
-      new Promise<CanvasLike>((resolve, reject) => {
-        wx.createSelectorQuery()
-          .select('#engineCanvas')
-          .fields({ node: true })
-          .exec((res) => {
-            const node = res && res[0] && (res[0] as { node?: unknown }).node;
-            if (!node) {
-              reject(new Error('获取引擎 Canvas 失败'));
-              return;
-            }
-            resolve(node as CanvasLike);
-          });
-      });
+    // 坑 12：默认页面隐藏 Canvas；USE_OFFSCREEN 时与离屏 Canvas 真机对照（实施文档 4.6 第 2 项）
+    this.provider = USE_OFFSCREEN ? createOffscreenProvider() : pageCanvasProvider(this, '#engineCanvas');
   },
 
   onShow() {

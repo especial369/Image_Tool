@@ -14,6 +14,16 @@
   color: #86909c;
 }
 
+.group {
+  margin-bottom: 8rpx;
+}
+
+.group-title {
+  font-size: 26rpx;
+  color: #86909c;
+  margin: 8rpx 0 16rpx;
+}
+
 /* 显式两行布局：flex:1 等分 + 兄弟 margin 做间距（不用 gap/calc，兼容所有机型内核） */
 .grid-row {
   display: flex;
@@ -62,6 +72,14 @@
 
 .icon-purple {
   background: rgba(114, 46, 209, 0.12);
+}
+
+.icon-cyan {
+  background: rgba(0, 180, 180, 0.12);
+}
+
+.icon-pink {
+  background: rgba(245, 63, 63, 0.1);
 }
 
 .card-name {
